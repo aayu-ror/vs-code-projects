@@ -70,10 +70,14 @@ addBtnBox.addEventListener("click",() =>{
     let disc=document.createElement("p");
     disc.innerText=discriptionBox.value;
     disc.classList="border-2 border-gray-800 bg-purple-400 text-black px-6  rounded-lg "
+    
+    let date=document.createElement("p");
+    date.innerText=new Date().toLocaleString();
 
     item.appendChild(task);
     item.appendChild(disc);
     frame2.appendChild(item);    
+    item.appendChild(date);
 });
 
 
