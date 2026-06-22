@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+     
+<div id="mainDiv" class="border border-gray-400"></div>
+<script>
+let mainDiv=document.getElementById("mainDiv"); 
+
+ let addBtn=document.createElement("button");
+ addBtn.innerText="ADD";
+ addBtn.classList="border border-red-800 text-white px-5 py-2 rounded-lg mr-3 bg-red-500 flex flex-col";
+  mainDiv.appendChild(addBtn);
+ addBtn.addEventListener("click",() =>{
+    if(frame1.style.display!="none"){
+       
+        frame2.style.display="block";
+         frame1.style.display="none";
+    }
+    else {
+    frame2.style.display="none";
+    frame1.style.display="block";
+    }
+});
+ let frame1=document.createElement("div");
+frame1.innerText="frame1";
+frame1.classList="border-2 border-red-700  text-white px-5 py-2 rounded-lg mr-3 bg-red-500 flex flex-col";
+  
+let frame2=document.createElement("div");
+frame2.innerText="frame2";
+frame2.style.display="none";
+frame2.classList="border-2 border-green-700  text-white px-5 py-2 rounded-lg mr-3 bg-green-500 flex flex-col";
+
+     let newBox=document.createElement("div");
+     frame1.appendChild(newBox);
+ let taskBox=document.createElement("input");
+taskBox.placeholder="enter a task";
+taskBox.classList="border border-purple-700  text-white px-5 py-2 rounded-lg mr-3 bg-purple-500 flex flex-col";
+newBox.appendChild(taskBox);
+    
+ let discriptionBox=document.createElement("input");
+discriptionBox.placeholder="enter a discription";
+discriptionBox.classList="border border-purple-700  text-white px-5 py-2 rounded-lg mr-3 bg-purple-500 flex flex-col";
+newBox.appendChild(discriptionBox);
+
+let addBtnBox=document.createElement("button");
+addBtnBox.innerText="ADDITEM";
+frame1.appendChild(addBtnBox);
+addBtnBox.classList="border border-blue-800  text-white px-5 py-2 rounded-lg mr-3 bg-blue-500 flex flex-col";
+
+addBtnBox.addEventListener("click",() =>{
+    frame1.style.display="none"; 
+    frame2.style.display="block";
+    
+    if(taskBox.value== "" || discriptionBox.value == ""){
+        alert("plz Enter vaild informations");
+        return;
+    };
+
+    let item=document.createElement("div");
+    let task=document.createElement("h2");
+    task.classList="border-2 border-gray-800 bg-purple-400 text-black px-6  rounded-lg "
+    task.innerText=taskBox.value;
+
+    let disc=document.createElement("p");
+    disc.innerText=discriptionBox.value;
+    disc.classList="border-2 border-gray-800 bg-purple-400 text-black px-6  rounded-lg "
+
+    item.appendChild(task);
+    item.appendChild(disc);
+    frame2.appendChild(item);    
+});
+
+
+mainDiv.appendChild(frame1);
+mainDiv.appendChild(frame2);
+
+</script>
+</body>
+</html>
