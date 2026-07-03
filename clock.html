@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div id="main-frame"></div>
+    <script>
+        let mainFrame = document.getElementById("main-frame");
+mainFrame.classList="border border-blue-900 flex flex-col bg-gradient-to-br from-indigo-100 via purple-100 to-pink-100 min-h-screen flex items-center justify-center sborder border-black-900 ";
+
+
+
+let time = document.createElement("h2");
+
+
+let clock=document.createElement("div");
+clock.classList="relative w-80 h-80 rounded-full border-8 border-black bg-white";
+
+let h=document.createElement("div");
+h.classList="absolute w-2 h-28 bg-black bottom-1/2 left-1/2 origin-bottom -translate-x-1/2";
+
+let m=document.createElement("div");
+m.classList="absolute w-1 h-28 bg-black bottom-1/2 left-1/2 origin-bottom -translate-x-1/2";
+
+let s=document.createElement("div");
+s.classList="absolute w-0.5 h-32 bg-black bottom-1/2 left-1/2 origin-bottom -translate-x-1/2";
+
+clock.append(h,m,s);
+mainFrame.appendChild(clock);
+mainFrame.appendChild(time);
+
+setInterval(() => {
+  let now=new Date();
+  let h1=now.getHours()%12;
+   let m1=now.getMinutes();
+   let s1=now.getSeconds();
+   h.style.transform=`translateX(-50%)rotate(${h1*30+m1*0.5}deg)`;
+    m.style.transform=`translateX(-50%)rotate(${m1*6}deg)`;
+     s.style.transform=`translateX(-50%)rotate(${s1*6}deg)`;
+
+
+
+}, 1000);
+    </script>
+</body>
+</html>
