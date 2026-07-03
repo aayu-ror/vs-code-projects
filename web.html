@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div id="main-frame"></div>
+    <script>
+   let mainFrame = document.getElementById("main-frame");
+mainFrame.classList=" flex flex-col bg-gradient-to-br from-indigo-100 via purple-100 to-pink-100 min-h-screen flex items-center justify-center sborder border-black-900 ";
+let time = document.createElement("h2");
+time.classList="  flex items-center justify-center border border-black-400 m-4 bg-indigo-200 text-black-600 w-50 h-30  text-4xl shadow-lg flex-none rounded-sm";
+mainFrame.appendChild(time);
+
+let dateBox=document.createElement("div");
+dateBox.classList=" flex flex-rowrap border-2 border-black-700 rounded-sm bg-gray-300";
+let day = document.createElement("p");  
+day.classList=" underline underline-offset-1 w-50 text-2xl font-bold flex-none text-blue-500  ";
+let date=document.createElement("h2");
+date.classList=" text-3xl w-50 flex-none";
+dateBox.append(day,date);
+setInterval(() => {
+  time.innerText = new Date().toLocaleTimeString();
+  day.innerText= new Date().toLocaleDateString("en-US",{weekday:"long"});
+  date.innerText=new Date().toLocaleDateString();
+  console.log(time);
+  console.log(day);
+
+
+mainFrame.appendChild(dateBox);
+
+}, 1000);
+</script>
+</body>
+</html>
