@@ -9,10 +9,7 @@
 
 </head>
 
-<body class="bg-gray-100">
-
-<!-- Header -->
-
+<body class="bg-gray-100";
 <div class="bg-pink-500 text-white p-5 flex justify-between items-center">
 
 <h1 class="text-3xl font-bold">
@@ -28,15 +25,11 @@ class="w-96 p-2 rounded text-black"
 
 </div>
 
-<!-- Product -->
-
 <div
 id="products"
 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 p-5">
 
 </div>
-
-<!-- Pagination -->
 
 <div class="flex justify-center gap-3 my-8">
 
@@ -139,8 +132,6 @@ Add To Cart
 });
 
 }
-// ================= CART =================
-
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function addToCart(id){
@@ -166,14 +157,8 @@ alert("Product Added To Cart");
 }
 
 window.addToCart=addToCart;
-
-
-// ================= PAGINATION =================
-
 const pageNumbers=document.getElementById("pageNumbers");
-
 function showPages(searchText){
-
 pageNumbers.innerHTML="";
 
 for(let i=1;i<=totalPages;i++){
@@ -222,42 +207,18 @@ if(currentPage<totalPages){
 
 currentPage++;
 
-fetchProducts(currentPage,search.value);
-
-}
-
+fetchProducts(currentPage);
 });
 
 
-// ================= SEARCH =================
-
-search.addEventListener("input",()=>{
-
-currentPage=1;
-
-fetchProducts(currentPage,search.value);
-
-});
-
-
-// ================= WISHLIST =================
-
-let wishlist=[];
-
+wishlist=[];
 function addWishlist(id){
-
 const product=products.find(item=>item.id===id);
-
 wishlist.push(product);
-
 alert("Added To Wishlist");
-
 }
 
 window.addWishlist=addWishlist;
-
-
-// ================= FETCH FIRST PAGE =================
 
 fetchProducts();
 fetchProducts();
