@@ -1,1 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My To-Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+  
+    <div id="mainDiv" class="max-w-2xl mx-auto mt-10 p-4"></div>
+      <div id="authDiv" class="max-w-2xl mx-auto mt-10 p-4"></div>
+    
+    
+    <script>
+      let add = document.createElement("button");
+      add.innerText = "Add";
+      add.className =
+        "w-full bg-red-500 hover:bg-red-300 text-white font-semibold py-3 rounded-lg mb-4";
+      add.addEventListener("click", () => {
+        hideAndShow();
+      });
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      window.mainDiv=document.getElementById("mainDiv");
+
+      let frame1 = document.createElement("div");
+      frame1.className = "bg-white rounded-xl shadow-md p-6 mb-4";
+
+      let heading = document.createElement("h1");
+      heading.innerText = "📝 To-Do List";
+      heading.className = "text-2xl font-bold text-[#333] mb-4 text-center";
+
+      let input = document.createElement("input");
+      input.id = "input";
+      input.placeholder = "Enter a Task Name";
+      input.className = "w-full border border-[#ccc] rounded-lg p-3 mb-3";
+
+      let description = document.createElement("textarea");
+      description.id = "description";
+      description.placeholder = "Enter a Task Description";
+      description.className = "w-full border-[#ccc] rounded-lg p-3 mb-3 h-24";
+
+      let addBtn = document.createElement("button");
+      addBtn.innerText = "Add Task";
+      addBtn.className =
+        "w-full bg-[#4a90e2] hover:bg-[#357ABD] text-white font-semibold py-3 rounded-lg";
+
+      frame1.append(heading, input, description, addBtn);
+
+      let frame2 = document.createElement("div");
+      frame2.className = "bg-white rounded-xl shadow-md p-6";
+      frame2.style.display = "none";
+
+      let searchDiv = document.createElement("div");
+      searchDiv.className = "flex gap-2 mb-4";
+
+      let searchBox = document.createElement("input");
+      searchBox.placeholder = "Search task...";
+      searchBox.className = "w-full border rounded-lg p-2";
+
+      let searchBtn = document.createElement("button");
+      searchBtn.innerText = "Search";
+      searchBtn.className = "bg-[#4a90e2] text-white px-4 rounded-lg";
+      searchDiv.append(searchBox, searchBtn);
+      frame2.appendChild(searchDiv);
+
+      let showHideTasksBtn = document.createElement("button");
+      showHideTasksBtn.innerText = "Show Tasks";
+      showHideTasksBtn.className =
+        "w-full bg-[#50E3C2] hover:bg-[#3BC9A8] text-white font-semibold py-3 rounded-lg mb-4";
+
+      function saveToLocalStorage() {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
+      function addTask() {
+        let task = {
+          taskId: Date.now(),
+          taskName: input.value,
+          descriptionBox: description.value,
+          status: false,
+        };
+        if (task.taskName == "" || task.descriptionBox == "") {
+          Swal.fire("Oops!", "Please fill both fields", "warning");
+          return;
+        }
+        tasks.unshift(task);
+        saveToLocalStorage();
+        input.value = "";
+        description.value = "";
+        hideAndShow();
+        Swal.fire("Added!", "Task saved", "success");
+      }
+
+      function hideAndShow() {
+        if (frame1.style.display == "none") {
+          frame1.style.display = "block";
+          frame2.style.display = "none";
+          showHideTasksBtn.innerText = "Show Tasks";
+        } else {
+          frame1.style.display = "none";
+          frame2.style.display = "block";
+          showHideTasksBtn.innerText = "Hide Tasks";
+          displayAllTasks(tasks);
+        }
+      }
+
+      searchBtn.addEventListener("click", () => {
+        let val = searchBox.value.toLowerCase().trim();
+        let filtered = tasks.filter(
+          (t) =>
+            t.taskName.toLowerCase().includes(val) ||
+            t.descriptionBox.toLowerCase().includes(val),
+        );
+        displayAllTasks(filtered);
+      });
+
+      function displayAllTasks(taskList) {
+        frame2.innerHTML = "";
+        frame2.appendChild(searchDiv);
+        if (taskList.length == 0) {
+          frame2.innerHTML += `<p class="text-center text-gray-500 mt-4">No Tasks Found</p>`;
+        } else {
+          for (let i = 0; i < taskList.length; i++) {
+            addToFrame2(taskList[i]);
+          }
+        }
+      }
+
+      function addToFrame2(task) {
+        let item = document.createElement("div");
+        item.id = "item-" + task.taskId;
+        item.className =
+          "border-l-4 border-[#4a90e2] bg-[#f9f9f9] p-4 rounded-lg mb-3";
+        if (task.status) item.classList.add("opacity-60");
+
+        let taskValue = document.createElement("h3");
+        taskValue.id = "title-" + task.taskId;
+        taskValue.className = "font-bold text-lg text-[#333]";
+        taskValue.innerText = task.taskName;
+
+        let disc = document.createElement("p");
+        disc.id = "desc-" + task.taskId;
+        disc.className = "text-gray-600 mt-1 break-words";
+        disc.innerText = task.descriptionBox;
+
+        let fullText = task.descriptionBox;
+        let isLong = fullText.length > 100;
+
+        disc.innerText = isLong ? fullText.substring(0, 100) + "..." : fullText;
+
+        let readBtn = null;
+        if (isLong) {
+          readBtn = document.createElement("span");
+          readBtn.innerText = " Read more";
+          readBtn.className = "text-[#4a90e2] cursor-pointer font-semibold";
+          readBtn.addEventListener("click", () => {
+            if (disc.innerText.includes("...")) {
+              disc.innerText = fullText;
+              readBtn.innerText = " Read less";
+            } else {
+              disc.innerText = fullText.substring(0, 100) + "...";
+              readBtn.innerText = " Read more";
+            }
+          });
+        }
+
+        let date = document.createElement("p");
+        date.innerHTML = new Date().toLocaleString();
+
+        if (task.status) {
+          taskValue.classList.add("line-through");
+          disc.classList.add("line-through");
+        }
+
+        let btnDiv = document.createElement("div");
+        btnDiv.className = "flex gap-2 mt-3";
+
+        let doneBtn = document.createElement("button");
+        doneBtn.innerHTML = task.status
+          ? `<svg xmlns="http://www.w3.org/2000/svg" class="border border-black bg-blue-500 rounded " width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"
+                 stroke-linejoin="round" class="lucide lucide-check-line-icon lucide-check-line"><path d="M20 4L9 15"/>
+                 <path d="M21 19L3 19"/><path d="M9 15L4 10"/></svg>`
+          : `<svg xmlns="http://www.w3.org/2000/svg" class="border-2 border-black  bg-gray-500 rounded " width="24" height="24" viewBox="0 0 24 24" fill="none" 
+               stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="lucide
+                lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`;
+        doneBtn.onclick = () => {
+          task.status = !task.status;
+          saveToLocalStorage();
+          displayAllTasks(tasks);
+        };
+
+        let editBtn = document.createElement("button");
+        editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+        stroke="#edbd0c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>`;
+        editBtn.className = "bg-[#4a90e2] text-white px-4 py-1 rounded";
+        editBtn.onclick = () => {
+          let titleEl = document.getElementById("title-" + task.taskId);
+          let descEl = document.getElementById("desc-" + task.taskId);
+
+          let newTitle = document.createElement("input");
+          newTitle.value = task.taskName;
+          newTitle.className = "w-full border p-2 rounded mb-2";
+
+          let newDesc = document.createElement("textarea");
+          newDesc.value = task.descriptionBox;
+          newDesc.className = "w-full border p-2 rounded mb-2 h-20";
+
+          let saveBtn = document.createElement("button");
+          saveBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+          fill="none" stroke="#0c1bed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+          class="lucide lucide-arrow-down-to-line-icon lucide-arrow-down-to-line">
+         <path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/></svg>`;
+          saveBtn.className = "bg-[#7ED321] text-white px-4 py-1 rounded mr-2";
+
+          let cancelBtn = document.createElement("button");
+          cancelBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+          stroke="#ed0c0c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-x-icon 
+          lucide-square-x"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="m15 9-6 6"/
+            ><path d="m9 9 6 6"/></svg>`;
+          cancelBtn.className = "bg-gray-500 text-white px-4 py-1 rounded";
+
+          item.replaceChild(newTitle, titleEl);
+          item.replaceChild(newDesc, descEl);
+          btnDiv.innerHTML = "";
+          btnDiv.append(saveBtn, cancelBtn);
+
+          saveBtn.onclick = () => {
+            task.taskName = newTitle.value;
+            task.descriptionBox = newDesc.value;
+            saveToLocalStorage();
+            displayAllTasks(tasks);
+            Swal.fire("Updated!", "Task updated", "success");
+          };
+          cancelBtn.onclick = () => displayAllTasks(tasks);
+        };
+
+        let delBtn = document.createElement("button");
+        delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+         fill="none" stroke="#0d0c0c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon
+             lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+            <path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+        delBtn.className = "bg-[#D0021B] text-white px-4 py-1 rounded";
+        delBtn.onclick = () => {
+          Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Remove",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              tasks = tasks.filter((t) => t.taskId != task.taskId);
+              saveToLocalStorage();
+              displayAllTasks(tasks);
+            }
+          });
+        };
+
+        btnDiv.append(doneBtn, editBtn, delBtn);
+        item.append(taskValue, disc);
+        if (readBtn) item.appendChild(readBtn);
+        item.appendChild(date);
+        item.appendChild(btnDiv);
+        frame2.appendChild(item);
+      }
+
+      addBtn.addEventListener("click", addTask);
+      showHideTasksBtn.addEventListener("click", hideAndShow);
+
+      mainDiv.append(add, showHideTasksBtn, frame1, frame2);
+    </script>
+      <script src="./login.js"></script>
+  </body>
+</html>
 
